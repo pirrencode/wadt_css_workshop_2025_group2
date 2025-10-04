@@ -1,0 +1,16 @@
+body {
+  background-color: cyan;
+}
+h1 {
+  color: blue;
+   margin: 30px;
+}
+h2 {
+  color: red;
+   margin: 15px;
+}
+p {
+  border: 1px solid black;
+  padding: 10px;
+  font-style: italic;
+}
