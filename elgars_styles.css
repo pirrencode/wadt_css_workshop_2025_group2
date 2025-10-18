@@ -1,3 +1,8 @@
+body {
+  width: 80% ;
+  margin: auto;
+}
+
 .title {
   font-size: 2em;
   margin-bottom: 0.5em;
@@ -22,3 +27,8 @@ p {
   font-size: 0.875rem;
 }
 
+li {
+  margin-bottom: 0.5em;
+  font-size: 0.875rem;
+  border: #333 1px solid;
+}
