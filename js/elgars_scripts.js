@@ -69,14 +69,12 @@
 			$('html, body').animate({ scrollTop: 0 }, 420);
 		});
 
-		/* ---- Inline flip-cards for specific headings ---- */
 		(function () {
 			var ids = ['csspreprocessor', 'sass', 'howtousesass', 'howtosass'];
 			ids.forEach(function (id) {
 				var $heading = $('#' + id);
 				if (!$heading.length) return;
 
-				// Collect following paragraphs until next heading of same-or-higher level
 				var $content = $();
 				var $el = $heading.next();
 				while ($el.length && !$el.is('h1,h2,h3,h4,h5,h6')) {
@@ -84,39 +82,54 @@
 					$el = $el.next();
 				}
 
-				// If there's no paragraph content, skip
 				if (!$content.length) return;
 
-				// Build flip card pieces
 				var $card = $('<div class="flip-card" tabindex="0" role="button" aria-pressed="false"></div>');
 				var $inner = $('<div class="flip-card-inner"></div>');
 				var $front = $('<div class="flip-card-front"></div>');
 				var $back = $('<div class="flip-card-back"></div>');
 
-				// Move heading into front (clone to preserve original if needed)
 				$front.append($heading.clone().addClass('front-heading'));
 
-				// Move content elements into back
 				$content.each(function () { $back.append($(this).clone()); });
 
 				$inner.append($front).append($back);
 				$card.append($inner);
 
-				// Replace heading and content with card
 				$content.first().before($card);
-				// remove original content and heading
 				$heading.remove();
 				$content.remove();
 
-				// Toggle function
 				function toggleFlip($c) {
-					var is = $c.hasClass('is-flipped');
-					$c.toggleClass('is-flipped', !is);
-					$c.attr('aria-pressed', String(!is));
-					$c.find('.flip-card-inner').toggleClass('is-flipped', !is);
+					var isFlipped = $c.hasClass('is-flipped');
+					var $inner = $c.find('.flip-card-inner');
+					
+					if (!isFlipped) {
+						var $backSide = $c.find('.flip-card-back');
+						var backHeight = $backSide[0].scrollHeight;
+						
+					$c.css('height', $c.height() + 'px'); 
+					
+					$c.animate({ height: backHeight + 'px' }, 400, 'swing', function() {
+						$c.toggleClass('is-flipped', true);
+						$inner.toggleClass('is-flipped', true);
+						$c.attr('aria-pressed', 'true');
+					});
+				} else {
+					var $frontSide = $c.find('.flip-card-front');
+					var frontHeight = $frontSide[0].scrollHeight;
+					
+					$c.toggleClass('is-flipped', false);
+					$inner.toggleClass('is-flipped', false);
+					$c.attr('aria-pressed', 'false');
+					
+					$c.css('height', $c.height() + 'px');
+					
+					$c.animate({ height: frontHeight + 'px' }, 400, 'swing', function() {
+						$c.css('height', 'auto');
+					});
 				}
-+
-				// Click and keyboard handlers
+				}
 				$card.on('click', function (e) {
 					e.preventDefault();
 					toggleFlip($card);
